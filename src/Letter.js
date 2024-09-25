@@ -22,8 +22,11 @@ export class LetterConfig {
         return this;
     }
 
+    /**
+     * @param {string[]} lines
+     */
     setSenderInformation(lines) {
-        assert(lines.length <= 9, "Too many lines in receiver");
+        assert(lines.length <= 9, "Too many lines in sender");
         this.sender = lines;
         return this;
     }
@@ -33,6 +36,15 @@ export class LetterConfig {
      */
     setSubject(text) {
         this.subject = text;
+        return this;
+    }
+
+    /**
+     * @param {string[]} lines
+     */
+    setContent(lines) {
+        assert(lines.length <= 35, "Too many lines in content");
+        this.content = lines;
         return this;
     }
 }
@@ -67,13 +79,14 @@ export default class Letter {
         this.stream = fs.createWriteStream(path);
         this.doc.pipe(this.stream);
 
-        this._writeLetter();
+        this._writeLetterHead();
+        this._writeLetterContent();
     }
 
     /**
-     * Write text to letter
+     * Write letter head
      */
-    _writeLetter() {
+    _writeLetterHead() {
         this.doc
 		    .fontSize(8)
             .text(this.config.returnText, pt(2.5), pt(5.916));
@@ -93,6 +106,17 @@ export default class Letter {
         this.doc
 		    .fontSize(14)
 		    .text(this.config.subject, pt(2.5), pt(10.346));
+    }
+
+    /**
+     * Write letter content
+     */
+    _writeLetterContent() {
+        this.config.content.forEach((line, index) => {
+            this.doc
+                .fontSize(10)
+                .text(line, pt(2.5), pt(10.346) + (index + 2) * 15);
+        });
     }
 
     /**

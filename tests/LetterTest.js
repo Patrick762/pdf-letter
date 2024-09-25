@@ -19,7 +19,16 @@ export function testLetter() {
             "",
             "Datum: 25.09.2024",
         ])
-        .setSubject("Antwort auf Nachricht über Formular");
+        .setSubject("Antwort auf Nachricht über Formular")
+        .setContent([
+            "Sehr geehrter Herr Mustermann,",
+            "wie bereits in unserem Gespräch besprochen, bla bla bla",
+            "",
+            "Mit freundlichen Grüßen,",
+            "",
+            "Max E. Mustermann",
+            "Kundenberater Musterunternehmen",
+        ]);
 
     const letter = new Letter(undefined, undefined, config);
     letter.end();
