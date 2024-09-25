@@ -1,0 +1,15 @@
+{
+  "name": "pdf-letter",
+  "version": "1.0.0",
+  "description": "Generate PDF letters",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Patrick762",
+  "license": "MIT",
+  "dependencies": {
+    "pdfkit": "^0.15.0"
+  },
+  "type": "module"
+}
