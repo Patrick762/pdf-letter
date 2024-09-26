@@ -59,15 +59,15 @@ export default class Letter {
      */
     constructor(
         lang = "de",
-        path = "document.pdf",
-        config = new LetterConfig()
+        path = "letter.pdf",
+        config = new LetterConfig(),
     ) {
         this.config = config;
 
         this.doc = new PDFDocument({
             lang,
             size: "A4",
-		    layout: "portrait",
+            layout: "portrait",
             margins: {
                 top: pt(4.5),
                 bottom: pt(1),
@@ -88,7 +88,7 @@ export default class Letter {
      */
     _writeLetterHead() {
         this.doc
-		    .fontSize(8)
+            .fontSize(8)
             .text(this.config.returnText, pt(2.5), pt(5.916));
 
         this.config.receiver.forEach((line, index) => {
@@ -103,9 +103,12 @@ export default class Letter {
                 .text(line, pt(12.5), pt(6) + index * 10);
         });
 
+        this.subjectHeight = 14;
         this.doc
-		    .fontSize(14)
-		    .text(this.config.subject, pt(2.5), pt(10.346));
+            .fontSize(this.subjectHeight)
+            .text(this.config.subject, pt(2.5), pt(10.346));
+
+        this.contentStartY = pt(10.346) + this.subjectHeight * 3;
     }
 
     /**
@@ -115,7 +118,7 @@ export default class Letter {
         this.config.content.forEach((line, index) => {
             this.doc
                 .fontSize(10)
-                .text(line, pt(2.5), pt(10.346) + (index + 2) * 15);
+                .text(line, pt(2.5), this.contentStartY + index * 15);
         });
     }
 
