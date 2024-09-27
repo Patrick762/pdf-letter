@@ -1,15 +1,27 @@
 {
   "name": "pdf-letter",
   "version": "1.0.0",
-  "description": "Generate PDF letters",
-  "main": "index.js",
+  "description": "Generate PDF letters, invoices and more",
   "scripts": {
     "test": "node test.js"
   },
-  "author": "Patrick762",
+  "author": "Patrick762 <pdf-letter.patrick762@hosting-rt.de>",
   "license": "MIT",
   "dependencies": {
     "pdfkit": "^0.15.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Patrick762/pdf-letter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Patrick762/pdf-letter/issues"
+  },
+  "keywords": [
+    "letter",
+    "pdf",
+    "javascript",
+    "din 5008"
+  ],
   "type": "module"
 }

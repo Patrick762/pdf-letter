@@ -5,6 +5,10 @@ import { assert } from "console";
 import { pt } from "./Helpers.js";
 
 export class LetterConfig {
+    constructor() {
+        this.content = [];
+    }
+
     /**
      * @param {string} text
      */
