@@ -19,6 +19,7 @@ export function testLetter() {
             "",
             "Datum: 25.09.2024",
         ])
+        .setLogo("./tests/testpattern1.png")
         .setSubject("Antwort auf Nachricht über Formular")
         .setContent([
             "Sehr geehrter Herr Mustermann,",

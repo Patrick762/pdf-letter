@@ -25,6 +25,7 @@ export function testInvoice() {
             "Datum: 26.09.2024",
             "Rechnung: DE5845678657",
         ])
+        .setLogo("./tests/testpattern2.png")
         .setSubject("Rechnung Nr. DE5845678657")
         .setContent([
             "Sehr geehrter Herr Mustermann,",

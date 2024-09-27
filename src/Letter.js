@@ -32,6 +32,14 @@ export class LetterConfig {
     }
 
     /**
+     * @param {string} logo Path to logo file
+     */
+    setLogo(logo) {
+        this.logo = logo;
+        return this;
+    }
+
+    /**
      * @param {string} text
      */
     setSubject(text) {
@@ -102,6 +110,16 @@ export default class Letter {
                 .fontSize(10)
                 .text(line, pt(12.5), pt(6) + index * 10);
         });
+
+        if (this.config.logo) {
+            this.doc.image(
+                this.config.logo,
+                pt(12.5), pt(2),
+                {
+                    width: pt(6),
+                },
+            );
+        }
 
         this.subjectHeight = 14;
         this.doc
