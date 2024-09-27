@@ -89,12 +89,14 @@ export class Letter {
      * @param path Path to write the PDF to
      * @param config Letter config
      * @param stream Write stream; overrides path
+     * @param font Font ttf file
      */
     constructor(
         lang = "de",
         path = "letter.pdf",
         config = new LetterConfig(),
         stream?: Writable,
+        font?: string,
     ) {
         this.fontSizeS = 8;
         this.lineHeightS = 15;
@@ -109,6 +111,7 @@ export class Letter {
         this.config = config;
 
         this.doc = new PDFDocument({
+            font,
             lang,
             size: "A4",
             layout: "portrait",

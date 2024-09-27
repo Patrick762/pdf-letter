@@ -25,9 +25,8 @@
     "javascript",
     "din 5008"
   ],
-  "type": "module",
   "devDependencies": {
-    "@types/node": "^22.7.3",
+    "@types/node": "^22.7.4",
     "@types/pdfkit": "^0.13.5",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"

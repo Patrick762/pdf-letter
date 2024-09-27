@@ -78,14 +78,16 @@ export class Invoice extends Letter {
      * @param path Path to write the PDF to
      * @param config Invoice config
      * @param stream Write stream; overrides path
+     * @param font Font ttf file
      */
     constructor(
         lang = "de",
         path = "invoice.pdf",
         config = new InvoiceConfig(),
         stream?: Writable,
+        font?: string,
     ) {
-        super(lang, path, config, stream);
+        super(lang, path, config, stream, font);
         this.config = config;
     }
 
