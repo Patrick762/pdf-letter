@@ -9,7 +9,6 @@
   "author": "Patrick762 <pdf-letter.patrick762@hosting-rt.de>",
   "license": "MIT",
   "dependencies": {
-    "fs": "^0.0.1-security",
     "pdfkit": "^0.15.0"
   },
   "main": "dist/index.js",

@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import PDFDocument from "pdfkit";
 import { assert } from "console";
 import { Writable } from "stream";
