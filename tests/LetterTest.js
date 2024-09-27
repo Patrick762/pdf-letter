@@ -5,7 +5,8 @@ export function testLetter() {
     config
         .setReturnText("Musterunternehmen | Am Musterweg 1 | 12345 Musterstadt")
         .setReceiver([
-            "Max Mustermann",
+            "AnderesUnternehmen",
+            "z.H. Max Mustermann",
             "Musterstraße 1",
             "12345 Musterhausen",
             "Deutschland",
@@ -21,6 +22,10 @@ export function testLetter() {
         ])
         .setLogo("./tests/testpattern1.png")
         .setSubject("Antwort auf Nachricht über Formular")
+        .setFooter([
+            "Musterunternehmen | Beispieltext | Anderes bla bla",
+            "Bankverbindung | Weitere Infos",
+        ])
         .setContent([
             "Sehr geehrter Herr Mustermann,",
             "wie bereits in unserem Gespräch besprochen, bla bla bla",

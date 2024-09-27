@@ -14,7 +14,7 @@ export class LetterConfig {
     }
 
     /**
-     * @param {string[]} lines
+     * @param {string[]} lines Receiver lines (max 6)
      */
     setReceiver(lines) {
         assert(lines.length <= 6, "Too many lines in receiver");
@@ -23,7 +23,7 @@ export class LetterConfig {
     }
 
     /**
-     * @param {string[]} lines
+     * @param {string[]} lines Sender information lines (max 9)
      */
     setSenderInformation(lines) {
         assert(lines.length <= 9, "Too many lines in sender");
@@ -48,11 +48,20 @@ export class LetterConfig {
     }
 
     /**
-     * @param {string[]} lines
+     * @param {string[]} lines Content lines (max 35)
      */
     setContent(lines) {
         assert(lines.length <= 35, "Too many lines in content");
         this.content = lines;
+        return this;
+    }
+
+    /**
+     * @param {string[]} lines Footer lines (max 2)
+     */
+    setFooter(lines) {
+        assert(lines.length <= 2, "Too many lines in footer");
+        this.footer = lines;
         return this;
     }
 }
@@ -70,6 +79,15 @@ export default class Letter {
         path = "letter.pdf",
         config = new LetterConfig(),
     ) {
+        this.fontSizeS = 8;
+        this.lineHeightS = 15;
+        this.fontSize = 12;
+        this.lineHeight = 15;
+        this.fontSizeL = 14;
+        this.lineHeightL = 16;
+
+        this.padLeft = pt(2);
+
         this.config = config;
 
         this.doc = new PDFDocument({
@@ -89,6 +107,7 @@ export default class Letter {
 
         this._writeLetterHead();
         this._writeLetterContent();
+        this._writeFooter();
     }
 
     /**
@@ -96,19 +115,19 @@ export default class Letter {
      */
     _writeLetterHead() {
         this.doc
-            .fontSize(8)
-            .text(this.config.returnText, pt(2.5), pt(5.916));
+            .fontSize(this.fontSizeS)
+            .text(this.config.returnText, this.padLeft, pt(5.916));
 
         this.config.receiver.forEach((line, index) => {
             this.doc
-                .fontSize(10)
-                .text(line, pt(2.5), pt(6.27) + index * 10);
+                .fontSize(this.fontSize)
+                .text(line, this.padLeft, pt(6) + this.lineHeightS + index * this.lineHeight);
         });
 
         this.config.sender.forEach((line, index) => {
             this.doc
-                .fontSize(10)
-                .text(line, pt(12.5), pt(6) + index * 10);
+                .fontSize(this.fontSize)
+                .text(line, pt(12.5), pt(6) + index * this.lineHeight);
         });
 
         if (this.config.logo) {
@@ -121,12 +140,11 @@ export default class Letter {
             );
         }
 
-        this.subjectHeight = 14;
         this.doc
-            .fontSize(this.subjectHeight)
-            .text(this.config.subject, pt(2.5), pt(10.346));
+            .fontSize(this.fontSizeL)
+            .text(this.config.subject, this.padLeft, pt(10.346));
 
-        this.contentStartY = pt(10.346) + this.subjectHeight * 3;
+        this.contentStartY = pt(10.346) + this.lineHeightL * 2;
     }
 
     /**
@@ -135,8 +153,28 @@ export default class Letter {
     _writeLetterContent() {
         this.config.content.forEach((line, index) => {
             this.doc
-                .fontSize(10)
-                .text(line, pt(2.5), this.contentStartY + index * 15);
+                .fontSize(this.fontSize)
+                .text(line, this.padLeft, this.contentStartY + index * this.lineHeight);
+        });
+    }
+
+    /**
+     * Write document footer
+     */
+    _writeFooter() {
+        if (!this.config.footer) {
+            return;
+        }
+
+        this.doc
+            .moveTo(pt(1), pt(26.5))
+            .lineTo(pt(20), pt(26.5))
+            .stroke();
+
+        this.config.footer.forEach((line, index) => {
+            this.doc
+                .fontSize(this.fontSizeS)
+                .text(line, this.padLeft, pt(27) + index * this.lineHeightS, {align: "center"});
         });
     }
 

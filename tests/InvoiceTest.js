@@ -27,11 +27,19 @@ export function testInvoice() {
         ])
         .setLogo("./tests/testpattern2.png")
         .setSubject("Rechnung Nr. DE5845678657")
+        .setFooter([
+            "Musterunternehmen | Beispieltext | Geschäftsführer",
+            "Bankverbindung | Weitere Infos",
+        ])
         .setContent([
             "Sehr geehrter Herr Mustermann,",
             "vielen Dank für Ihre Bestellung. Sie erhalten hiermit die Rechnung zu Ihrer Bestellung",
             "Mit freundlichen Grüßen,",
             "Musterunternehmen",
+            "",
+            "",
+            "",
+            "Letzte Zeile",
         ])
         .setProducts(products)
         .setTaxPercentage(7)

@@ -1,5 +1,3 @@
-import fs from "fs";
-import PDFDocument from "pdfkit";
 import { assert } from "console";
 
 import { pt } from "./Helpers.js";
@@ -33,7 +31,7 @@ export class InvoiceConfig extends LetterConfig {
     }
 
     /**
-     * @param {string[]} lines
+     * @param {string[]} lines Content lines (max 8)
      */
     setContent(lines) {
         assert(lines.length <= 8, "Too many lines in content");
@@ -42,9 +40,10 @@ export class InvoiceConfig extends LetterConfig {
     }
 
     /**
-     * @param {InvoiceProduct[]} products Products
+     * @param {InvoiceProduct[]} products Products (max 8)
      */
     setProducts(products) {
+        assert(products.length <= 8, "Too many lines in products");
         this.products = products;
         return this;
     }
@@ -101,30 +100,30 @@ export default class Invoice extends Letter {
      * Write letter content
      */
     _writeLetterContent() {
-        const amountX = pt(2.5);
+        const amountX = this.padLeft;
         const nameX = pt(4);
         const singleX = pt(13);
         const sumX = pt(17);
 
         // Table header
         this.doc
-            .fontSize(10)
+            .fontSize(this.fontSize)
             .text(this.config.amountText, amountX, this.contentStartY)
             .text(this.config.descriptionText, nameX, this.contentStartY)
             .text(this.config.priceSingleText, singleX, this.contentStartY)
             .text(this.config.priceSumText, sumX, this.contentStartY);
-        this.contentStartY = this.contentStartY + 15;
+        this.contentStartY = this.contentStartY + this.lineHeight;
 
         // Product list
         this.config.products.forEach((product, index) => {
             this.doc
-                .fontSize(10)
-                .text(product.amount, amountX, this.contentStartY + index * 15)
-                .text(product.name, nameX, this.contentStartY + index * 15)
-                .text(product.price.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, singleX, this.contentStartY + index * 15)
-                .text((product.price * product.amount).toString().replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY + index * 15);
+                .fontSize(this.fontSize)
+                .text(product.amount, amountX, this.contentStartY + index * this.lineHeight)
+                .text(product.name, nameX, this.contentStartY + index * this.lineHeight)
+                .text(product.price.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, singleX, this.contentStartY + index * this.lineHeight)
+                .text((product.price * product.amount).toString().replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY + index * this.lineHeight);
         });
-        this.contentStartY = this.contentStartY + (this.config.products.length) * 15;
+        this.contentStartY = this.contentStartY + (this.config.products.length) * this.lineHeight;
 
         // Sum
         const sumProducts = this.config.products.map(p => p.price).reduce((a, b) => a + b);
@@ -152,8 +151,8 @@ export default class Invoice extends Letter {
         // Text
         this.config.content.forEach((line, index) => {
             this.doc
-                .fontSize(10)
-                .text(line, pt(2.5), this.contentStartY + index * 15);
+                .fontSize(this.fontSize)
+                .text(line, this.padLeft, this.contentStartY + index * this.lineHeight);
         });
     }
 }
