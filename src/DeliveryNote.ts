@@ -82,6 +82,13 @@ export class DeliveryNote extends Letter {
             .text(this.config.descriptionText, nameX, this.contentStartY)
         this.contentStartY = this.contentStartY + this.lineHeight;
 
+        // Line
+        this.doc
+            .moveTo(amountX - 5, this.contentStartY)
+            .lineTo(pt(18), this.contentStartY)
+            .stroke();
+        this.contentStartY = this.contentStartY + 5;
+
         // Product list
         this.config.products.forEach((product, index) => {
             this.doc

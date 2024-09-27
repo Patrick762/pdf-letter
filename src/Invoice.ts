@@ -109,6 +109,13 @@ export class Invoice extends Letter {
             .text(this.config.priceSumText, sumX, this.contentStartY);
         this.contentStartY = this.contentStartY + this.lineHeight;
 
+        // Line
+        this.doc
+            .moveTo(amountX - 5, this.contentStartY)
+            .lineTo(pt(19), this.contentStartY)
+            .stroke();
+        this.contentStartY = this.contentStartY + 5;
+
         // Product list
         this.config.products.forEach((product, index) => {
             this.doc
@@ -116,12 +123,12 @@ export class Invoice extends Letter {
                 .text(product.amount.toString(), amountX, this.contentStartY + index * this.lineHeight)
                 .text(product.name, nameX, this.contentStartY + index * this.lineHeight)
                 .text(product.price.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, singleX, this.contentStartY + index * this.lineHeight)
-                .text((product.price * product.amount).toString().replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY + index * this.lineHeight);
+                .text((product.price * product.amount).toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY + index * this.lineHeight);
         });
         this.contentStartY = this.contentStartY + (this.config.products.length) * this.lineHeight;
 
         // Sum
-        const sumProducts = this.config.products.map(p => p.price).reduce((a, b) => a + b);
+        const sumProducts = this.config.products.map(p => p.price * p.amount).reduce((a, b) => a + b);
         this.doc
             .fontSize(12)
             .text(this.config.sumText, singleX, this.contentStartY)

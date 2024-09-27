@@ -99,7 +99,7 @@ export class Letter {
         font?: string,
     ) {
         this.fontSizeS = 8;
-        this.lineHeightS = 15;
+        this.lineHeightS = 12;
         this.fontSize = 12;
         this.lineHeight = 15;
         this.fontSizeL = 14;
@@ -151,8 +151,8 @@ export class Letter {
 
         this.config.sender.forEach((line, index) => {
             this.doc
-                .fontSize(this.fontSize)
-                .text(line, pt(12.5), pt(6) + index * this.lineHeight);
+                .fontSize(this.fontSizeS)
+                .text(line, pt(12.5), pt(6) + index * this.lineHeightS);
         });
 
         if (this.config.logo) {
@@ -169,7 +169,7 @@ export class Letter {
             .fontSize(this.fontSizeL)
             .text(this.config.subject, this.padLeft, pt(10.346));
 
-        this.contentStartY = pt(10.346) + this.lineHeightL * 2;
+        this.contentStartY = pt(10.346) + this.lineHeightL * 3;
     }
 
     /**
