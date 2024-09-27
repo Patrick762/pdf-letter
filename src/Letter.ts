@@ -1,6 +1,7 @@
 import fs from "fs";
 import PDFDocument from "pdfkit";
 import { assert } from "console";
+import { Writable } from "stream";
 
 import { pt } from "./helpers";
 
@@ -78,7 +79,7 @@ export class Letter {
     padLeft: number;
     config: LetterConfig;
     doc: PDFKit.PDFDocument;
-    stream: fs.WriteStream;
+    stream: Writable;
     contentStartY: number;
 
     /**
@@ -87,11 +88,13 @@ export class Letter {
      * @param lang Language code
      * @param path Path to write the PDF to
      * @param config Letter config
+     * @param stream Write stream; overrides path
      */
     constructor(
         lang = "de",
         path = "letter.pdf",
         config = new LetterConfig(),
+        stream?: Writable,
     ) {
         this.fontSizeS = 8;
         this.lineHeightS = 15;
@@ -117,7 +120,11 @@ export class Letter {
             },
         });
 
-        this.stream = fs.createWriteStream(path);
+        if (stream) {
+            this.stream = stream;
+        } else {
+            this.stream = fs.createWriteStream(path);
+        }
         this.doc.pipe(this.stream);
 
         this._writeLetterHead();

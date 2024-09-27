@@ -1,4 +1,5 @@
 import { assert } from "console";
+import { Writable } from "stream";
 
 import { pt } from "./helpers";
 import { Letter, LetterConfig } from "./Letter";
@@ -48,18 +49,20 @@ export class DeliveryNote extends Letter {
     config: DeliveryNoteConfig;
 
     /**
-     * Create a letter object
+     * Create a delivery note object
      * 
      * @param lang Language code
      * @param path Path to write the PDF to
      * @param config Invoice config
+     * @param stream Write stream; overrides path
      */
     constructor(
         lang = "de",
         path = "deliveryNote.pdf",
         config = new DeliveryNoteConfig(),
+        stream?: Writable,
     ) {
-        super(lang, path, config);
+        super(lang, path, config, stream);
         this.config = config;
     }
 
