@@ -1,52 +1,58 @@
 import { assert } from "console";
 
-import { pt } from "./Helpers.js";
-import Letter, { LetterConfig } from "./Letter.js";
+import { pt } from "./helpers";
+import { Letter, LetterConfig } from "./Letter";
 
 export class DeliveryNoteProduct {
-    /**
-     * @param {string} name
-     * @param {number} amount
-     */
-    constructor(name, amount = 1) {
+    name: string;
+    amount: number;
+
+    constructor(name: string, amount = 1) {
         this.name = name;
         this.amount = amount;
     }
 }
 
 export class DeliveryNoteConfig extends LetterConfig {
+    amountText: string;
+    descriptionText: string;
+    products: DeliveryNoteProduct[];
+
     constructor() {
         super();
         this.amountText = "Anzahl";
         this.descriptionText = "Beschreibung";
+        this.products = [];
     }
 
     /**
-     * @param {string[]} lines Content lines (max 8)
+     * @param lines Content lines (max 8)
      */
-    setContent(lines) {
+    setContent(lines: string[]) {
         assert(lines.length <= 8, "Too many lines in content");
         this.content = lines;
         return this;
     }
 
     /**
-     * @param {DeliveryNoteProduct[]} products Products (max 8)
+     * @param products Products (max 8)
      */
-    setProducts(products) {
+    setProducts(products: DeliveryNoteProduct[]) {
         assert(products.length <= 8, "Too many lines in products");
         this.products = products;
         return this;
     }
 }
 
-export default class DeliveryNote extends Letter {
+export class DeliveryNote extends Letter {
+    config: DeliveryNoteConfig;
+
     /**
      * Create a letter object
      * 
-     * @param {string} lang Language code
-     * @param {string} path Path to write the PDF to
-     * @param {DeliveryNoteConfig} config Invoice config
+     * @param lang Language code
+     * @param path Path to write the PDF to
+     * @param config Invoice config
      */
     constructor(
         lang = "de",
@@ -54,6 +60,7 @@ export default class DeliveryNote extends Letter {
         config = new DeliveryNoteConfig(),
     ) {
         super(lang, path, config);
+        this.config = config;
     }
 
     /**
@@ -74,7 +81,7 @@ export default class DeliveryNote extends Letter {
         this.config.products.forEach((product, index) => {
             this.doc
                 .fontSize(this.fontSize)
-                .text(product.amount, amountX, this.contentStartY + index * this.lineHeight)
+                .text(product.amount.toString(), amountX, this.contentStartY + index * this.lineHeight)
                 .text(product.name, nameX, this.contentStartY + index * this.lineHeight);
         });
         this.contentStartY = this.contentStartY + (this.config.products.length) * this.lineHeight;

@@ -1,4 +1,4 @@
-import Letter, { LetterConfig } from "../src/Letter.js";
+import { Letter, LetterConfig } from "../src/Letter";
 
 export function testLetter() {
     const config = new LetterConfig();

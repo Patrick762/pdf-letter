@@ -1,4 +1,5 @@
 node_modules
+dist
 letter.pdf
 invoice.pdf
 deliveryNote.pdf

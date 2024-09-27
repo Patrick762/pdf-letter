@@ -2,81 +2,91 @@ import fs from "fs";
 import PDFDocument from "pdfkit";
 import { assert } from "console";
 
-import { pt } from "./Helpers.js";
+import { pt } from "./helpers";
 
 export class LetterConfig {
-    constructor() {
-        this.content = [];
-    }
+    content: string[] = [];
+    returnText = "";
+    receiver: string[] = [];
+    sender: string[] = [];
+    logo?: string;
+    subject = "";
+    footer?: string[];
 
-    /**
-     * @param {string} text
-     */
-    setReturnText(text) {
+    setReturnText(text: string) {
         this.returnText = text;
         return this;
     }
 
     /**
-     * @param {string[]} lines Receiver lines (max 6)
+     * @param lines Receiver lines (max 6)
      */
-    setReceiver(lines) {
+    setReceiver(lines: string[]) {
         assert(lines.length <= 6, "Too many lines in receiver");
         this.receiver = lines;
         return this;
     }
 
     /**
-     * @param {string[]} lines Sender information lines (max 9)
+     * @param lines Sender information lines (max 9)
      */
-    setSenderInformation(lines) {
+    setSenderInformation(lines: string[]) {
         assert(lines.length <= 9, "Too many lines in sender");
         this.sender = lines;
         return this;
     }
 
     /**
-     * @param {string} logo Path to logo file
+     * @param logo Path to logo file
      */
-    setLogo(logo) {
+    setLogo(logo: string) {
         this.logo = logo;
         return this;
     }
 
-    /**
-     * @param {string} text
-     */
-    setSubject(text) {
+    setSubject(text: string) {
         this.subject = text;
         return this;
     }
 
     /**
-     * @param {string[]} lines Content lines (max 35)
+     * @param lines Content lines (max 35)
      */
-    setContent(lines) {
+    setContent(lines: string[]) {
         assert(lines.length <= 35, "Too many lines in content");
         this.content = lines;
         return this;
     }
 
     /**
-     * @param {string[]} lines Footer lines (max 2)
+     * @param lines Footer lines (max 2)
      */
-    setFooter(lines) {
+    setFooter(lines: string[]) {
         assert(lines.length <= 2, "Too many lines in footer");
         this.footer = lines;
         return this;
     }
 }
 
-export default class Letter {
+export class Letter {
+    fontSizeS: number;
+    lineHeightS: number;
+    fontSize: number;
+    lineHeight: number;
+    fontSizeL: number;
+    lineHeightL: number;
+    padLeft: number;
+    config: LetterConfig;
+    doc: PDFKit.PDFDocument;
+    stream: fs.WriteStream;
+    contentStartY: number;
+
     /**
      * Create a letter object
      * 
-     * @param {string} lang Language code
-     * @param {string} path Path to write the PDF to
-     * @param {LetterConfig} config Letter config
+     * @param lang Language code
+     * @param path Path to write the PDF to
+     * @param config Letter config
      */
     constructor(
         lang = "de",
@@ -91,6 +101,7 @@ export default class Letter {
         this.lineHeightL = 16;
 
         this.padLeft = pt(2);
+        this.contentStartY = 0;
 
         this.config = config;
 

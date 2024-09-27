@@ -1,15 +1,14 @@
 import { assert } from "console";
 
-import { pt } from "./Helpers.js";
-import Letter, { LetterConfig } from "./Letter.js";
+import { pt } from "./helpers";
+import { Letter, LetterConfig } from "./Letter";
 
 export class InvoiceProduct {
-    /**
-     * @param {string} name
-     * @param {number} price
-     * @param {number} amount
-     */
-    constructor(name, price, amount = 1) {
+    name: string;
+    price: number;
+    amount: number;
+
+    constructor(name: string, price: number, amount = 1) {
         this.name = name;
         this.price = price;
         this.amount = amount;
@@ -17,70 +16,60 @@ export class InvoiceProduct {
 }
 
 export class InvoiceConfig extends LetterConfig {
-    constructor() {
-        super();
-        this.currency = "€";
-        this.taxPercentage = 19;
-        this.decimalSymbol = ",";
-        this.amountText = "Anzahl";
-        this.descriptionText = "Beschreibung";
-        this.priceSingleText = "Einzelpreis";
-        this.priceSumText = "Summe";
-        this.sumText = "Gesamt";
-        this.inclTaxText = "Brutto";
-    }
+    currency = "€";
+    taxPercentage = 19;
+    decimalSymbol = ",";
+    amountText = "Anzahl";
+    descriptionText = "Beschreibung";
+    priceSingleText = "Einzelpreis";
+    priceSumText = "Summe";
+    sumText = "Gesamt";
+    tax?: number;
+    inclTaxText = "Brutto";
+    products: InvoiceProduct[] = [];
 
     /**
-     * @param {string[]} lines Content lines (max 8)
+     * @param lines Content lines (max 8)
      */
-    setContent(lines) {
+    setContent(lines: string[]) {
         assert(lines.length <= 8, "Too many lines in content");
         this.content = lines;
         return this;
     }
 
     /**
-     * @param {InvoiceProduct[]} products Products (max 8)
+     * @param products Products (max 8)
      */
-    setProducts(products) {
+    setProducts(products: InvoiceProduct[]) {
         assert(products.length <= 8, "Too many lines in products");
         this.products = products;
         return this;
     }
 
-    /**
-     * @param {string} currency
-     */
-    setCurrency(currency) {
+    setCurrency(currency: string) {
         this.currency = currency;
         return this;
     }
 
-    /**
-     * @param {number} percentage
-     */
-    setTaxPercentage(percentage) {
+    setTaxPercentage(percentage: number) {
         this.taxPercentage = percentage;
         return this;
     }
 
-    /**
-     * @param {number} tax
-     */
-    setTax(tax) {
+    setTax(tax: number) {
         this.tax = tax;
         return this;
     }
 
-    /**
-     * @param {"."|","} symbol
-     */
-    setDecimalSymbol(symbol) {
+    setDecimalSymbol(symbol: "."|",") {
         this.decimalSymbol = symbol;
+        return this;
     }
 }
 
-export default class Invoice extends Letter {
+export class Invoice extends Letter {
+    config: InvoiceConfig;
+
     /**
      * Create a letter object
      * 
@@ -94,6 +83,7 @@ export default class Invoice extends Letter {
         config = new InvoiceConfig(),
     ) {
         super(lang, path, config);
+        this.config = config;
     }
 
     /**
@@ -118,7 +108,7 @@ export default class Invoice extends Letter {
         this.config.products.forEach((product, index) => {
             this.doc
                 .fontSize(this.fontSize)
-                .text(product.amount, amountX, this.contentStartY + index * this.lineHeight)
+                .text(product.amount.toString(), amountX, this.contentStartY + index * this.lineHeight)
                 .text(product.name, nameX, this.contentStartY + index * this.lineHeight)
                 .text(product.price.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, singleX, this.contentStartY + index * this.lineHeight)
                 .text((product.price * product.amount).toString().replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY + index * this.lineHeight);
@@ -134,19 +124,21 @@ export default class Invoice extends Letter {
         this.contentStartY = this.contentStartY + 17;
 
         // Tax
-        this.doc
-            .fontSize(12)
-            .text("+ MwSt. " + this.config.taxPercentage + "%", singleX, this.contentStartY)
-            .text(this.config.tax.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY);
-        this.contentStartY = this.contentStartY + 17;
+        if(this.config.tax) {
+            this.doc
+                .fontSize(12)
+                .text("+ MwSt. " + this.config.taxPercentage + "%", singleX, this.contentStartY)
+                .text(this.config.tax.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY);
+            this.contentStartY = this.contentStartY + 17;
 
-        // Price incl. Tax
-        const fullSum = sumProducts + this.config.tax;
-        this.doc
-            .fontSize(12)
-            .text(this.config.inclTaxText, singleX, this.contentStartY)
-            .text(fullSum.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY);
-        this.contentStartY = this.contentStartY + 3 * 17;
+            // Price incl. Tax
+            const fullSum = sumProducts + this.config.tax;
+            this.doc
+                .fontSize(12)
+                .text(this.config.inclTaxText, singleX, this.contentStartY)
+                .text(fullSum.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY);
+            this.contentStartY = this.contentStartY + 3 * 17;
+        }
 
         // Text
         this.config.content.forEach((line, index) => {

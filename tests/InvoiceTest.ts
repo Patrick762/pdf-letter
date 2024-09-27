@@ -1,4 +1,4 @@
-import Invoice, { InvoiceConfig, InvoiceProduct } from "../src/Invoice.js";
+import { Invoice, InvoiceConfig, InvoiceProduct } from "../src/Invoice";
 
 export function testInvoice() {
     const products = [

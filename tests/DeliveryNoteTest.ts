@@ -1,4 +1,4 @@
-import DeliveryNote, { DeliveryNoteConfig, DeliveryNoteProduct } from "../src/DeliveryNote.js";
+import { DeliveryNote, DeliveryNoteConfig, DeliveryNoteProduct } from "../src/DeliveryNote";
 
 export function testDeliveryNote() {
     const products = [
