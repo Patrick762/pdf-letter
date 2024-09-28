@@ -125,7 +125,7 @@ export class Invoice extends Letter {
                 .text(product.price.toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, singleX, this.contentStartY + index * this.lineHeight)
                 .text((product.price * product.amount).toFixed(2).replace(".", this.config.decimalSymbol) + " " + this.config.currency, sumX, this.contentStartY + index * this.lineHeight);
         });
-        this.contentStartY = this.contentStartY + (this.config.products.length) * this.lineHeight;
+        this.contentStartY = this.contentStartY + (this.config.products.length + 1) * this.lineHeight;
 
         // Sum
         const sumProducts = this.config.products.map(p => p.price * p.amount).reduce((a, b) => a + b);
