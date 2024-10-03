@@ -13,6 +13,7 @@ export class LetterConfig {
     logo?: string;
     subject = "";
     footer?: string[];
+    showBorders?: boolean;
 
     setReturnText(text: string) {
         this.returnText = text;
@@ -65,6 +66,14 @@ export class LetterConfig {
     setFooter(lines: string[]) {
         assert(lines.length <= 2, "Too many lines in footer");
         this.footer = lines;
+        return this;
+    }
+
+    /**
+     * Enable borders around the letter fields
+     */
+    setShowBorders(shown: boolean) {
+        this.showBorders = shown;
         return this;
     }
 }
@@ -130,29 +139,46 @@ export class Letter {
         }
         this.doc.pipe(this.stream);
 
+        this._drawBorders();
         this._writeLetterHead();
         this._writeLetterContent();
         this._writeFooter();
+    }
+
+    _drawBorders() {
+        if (!this.config.showBorders) {
+            return;
+        }
+
+        this.doc
+            .rect(pt(2), pt(4.5), pt(9), pt(4.5))
+            .rect(pt(12.5), pt(5), pt(7.5), pt(4))
+            .lineWidth(2)
+            .stroke("#f0f")
+            .strokeColor("#000");
     }
 
     /**
      * Write letter head
      */
     _writeLetterHead() {
+        const returnTextY = pt(4.5);
+        const receiverSenderY = pt(5);
+
         this.doc
             .fontSize(this.fontSizeS)
-            .text(this.config.returnText, this.padLeft, pt(5.916));
+            .text(this.config.returnText, this.padLeft, returnTextY);
 
         this.config.receiver.forEach((line, index) => {
             this.doc
                 .fontSize(this.fontSize)
-                .text(line, this.padLeft, pt(6) + this.lineHeightS + index * this.lineHeight);
+                .text(line, this.padLeft, receiverSenderY + this.lineHeightS + index * this.lineHeight);
         });
 
         this.config.sender.forEach((line, index) => {
             this.doc
                 .fontSize(this.fontSizeS)
-                .text(line, pt(12.5), pt(6) + index * this.lineHeightS);
+                .text(line, pt(12.5), receiverSenderY + index * this.lineHeightS);
         });
 
         if (this.config.logo) {

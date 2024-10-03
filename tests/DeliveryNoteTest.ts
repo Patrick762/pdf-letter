@@ -30,7 +30,8 @@ export function testDeliveryNote() {
             "Musterunternehmen | Beispieltext | Geschäftsführer",
             "Bankverbindung | Weitere Infos",
         ])
-        .setProducts(products);
+        .setProducts(products)
+        .setShowBorders(true);
 
     const deliveryNote = new DeliveryNote(undefined, undefined, config);
     deliveryNote.end();

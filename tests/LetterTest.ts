@@ -34,7 +34,8 @@ export function testLetter() {
             "",
             "Max E. Mustermann",
             "Kundenberater Musterunternehmen",
-        ]);
+        ])
+        .setShowBorders(true);
 
     const letter = new Letter(undefined, undefined, config);
     letter.end();

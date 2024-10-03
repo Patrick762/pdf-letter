@@ -43,7 +43,8 @@ export function testInvoice() {
         ])
         .setProducts(products)
         .setTaxPercentage(7)
-        .setTax(0.58);
+        .setTax(0.58)
+        .setShowBorders(true);
 
     const invoice = new Invoice(undefined, undefined, config);
     invoice.end();
