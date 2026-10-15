@@ -7,3 +7,5 @@ console.log("TEST");
 testLetter();
 testInvoice();
 testDeliveryNote();
+
+console.log("TEST DONE");
