@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./
+    environment:
+      name: npm
+      deployment: false
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
