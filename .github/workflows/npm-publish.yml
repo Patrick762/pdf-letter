@@ -19,8 +19,8 @@ jobs:
       name: npm
       deployment: false
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 26
           registry-url: https://registry.npmjs.org/
